@@ -1,0 +1,5 @@
+Tue, 13 Mar 2018 09:34:43 filter_ip.py[line:130] INFO ########################Filtering Now########################
+Tue, 13 Mar 2018 09:34:47 connectionpool.py[line:824] DEBUG Starting new HTTPS connection (1): www.lagou.com
+Tue, 13 Mar 2018 09:34:57 filter_ip.py[line:94] ERROR HTTPSConnectionPool(host='www.lagou.com', port=443): Max retries exceeded with url: /jobs/positionAjax.json?city=%E6%B7%B1%E5%9C%B3&needAddtionalResult=false&isSchoolJob=0 (Caused by ConnectTimeoutError(<urllib3.connection.VerifiedHTTPSConnection object at 0x7fc7cc3ab7f0>, 'Connection to 123.53.86.158 timed out. (connect timeout=10)'))
+Tue, 13 Mar 2018 09:34:57 filter_ip.py[line:65] ERROR 1-Failed!1.119.184.216:3128
+Tue, 13 Mar 2018 09:35:00 connectionpool.py[line:824] DEBUG Starting new HTTPS connection (1): www.lagou.com
