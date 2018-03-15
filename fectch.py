@@ -7,7 +7,7 @@ from urllib.parse import urljoin, unquote
 import time
 from scrapy import Selector
 import pymysql
-from ProxyFecth.config_MySQL import LOCALCONFIG
+from config_MySQL import LOCALCONFIG
 
 """
 免费代理网址
@@ -29,9 +29,6 @@ class ProxyNewIp(object):
         self.conn = pymysql.connect(**LOCALCONFIG)
         self.cursor = self.conn.cursor()
         self.test_url = test_url
-
-    def get_random_ip(self):
-        return self.getproxy()
 
     def update(self, url=None):
         """
@@ -63,7 +60,8 @@ class ProxyNewIp(object):
             raise Exception('If you want to check proxy, you should set you test_url first.')
         proxy_url = f'http://{ip}:{port}'
         proxy_dict = {
-            'http':proxy_url
+            'http': proxy_url,
+            'https': proxy_url
         }
         try:
             response = requests.get(test_url, self.headers, proxies=proxy_dict)
@@ -75,28 +73,11 @@ class ProxyNewIp(object):
         pass
 
     def _mysql_close(self):
-        """
-        关闭mysql链接前重置flag
-        :return:
-        """
-        update_sql = """
-            UPDATE proxyip set flag = 0 WHERE flag = 1;
-        """
-        self.cursor.execute(update_sql)
-        self.conn.commit()
         self.cursor.close()
         self.conn.close()
-
-    def _sleep(self, page):
-        if page % 3 == 0:
-            time.sleep(random.randint(5, 10))
-        if page % 10 == 0:
-            time.sleep(random.randint(1, 3))
-        if page % 100 == 0:
-            time.sleep(random.randint(100, 150))
-
 
 
 if __name__ == '__main__':
     t = ProxyNewIp()
     t.update()
+    t.close()

@@ -2,9 +2,9 @@
 import os
 import requests
 from scrapy import Selector
-from ProxyFecth.fectch import ProxyNewIp
+from fectch import ProxyNewIp
 from urllib.parse import urljoin
-from ProxyFecth.caphcat_identify import guess
+from caphcat_identify import guess
 
 
 class Proxymimvp(ProxyNewIp):
@@ -61,10 +61,14 @@ class Proxymimvp(ProxyNewIp):
             ip_ = each.split('-')[0]
 
             update_sql = """
-                        UPDATE proxymimvp SET port={port_} WHERE ip='{ip_}';
+                        UPDATE proxymimvp SET port={port_} WHERE ip='{ip_}'and port is NULL;
                     """.format(port_=port_, ip_=ip_)
+            delete_sql = """
+                DELETE FROM proxymimvp WHERE speed > 1;
+            """
             # print(update_sql)
             self.cursor.execute(update_sql)
+            self.cursor.execute(delete_sql)
             self.conn.commit()
 
     def save_image(self):
@@ -81,6 +85,13 @@ class Proxymimvp(ProxyNewIp):
                 f.write(response)
 
         self._identify()
+        self.delete_image()
+
+    def delete_image(self):
+        files = os.listdir(self.image_dir)
+        if len(files) > 50:
+            for file in files:
+                os.remove(self.image_dir + file)
 
 
 if __name__ == '__main__':
