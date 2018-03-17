@@ -7,6 +7,7 @@ from fectch_mimvp import Proxymimvp
 from fectch_xici import ProxyxiciIp
 import gevent
 from gevent import monkey
+import time
 monkey.patch_all()
 
 li = [Proxygoubanjia, Proxymimvp, ProxyxiciIp]
@@ -21,6 +22,8 @@ def run(p):
     p.close()
 
 
+start_time = time.time()
+
 for c in li:
     p_list.append(c())
 
@@ -32,3 +35,4 @@ for p in p_list:
 for t in t_list:
     t.join()
 
+print("Total cost {} seconds".format(time.time() - start_time))
