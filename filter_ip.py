@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+import datetime
 
 import pymysql
 import time
@@ -16,18 +17,27 @@ class GetIP(object):
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/64.0.3282.167 Chrome/64.0.3282.167 Safari/537.36'}
     tables = ['proxymimvp', 'proxyxici', 'proxygoubanjia']
 
-    def __init__(self, timeout=10):
+    def __init__(self, timeout=10, limit=10):
         self.conn = pymysql.connect(**CONFIG)
         self.cursor = self.conn.cursor()
         self.timeout = timeout
+        self.limit = limit
+        self.execute("""set SQL_SAFE_UPDATES=0""")
 
-    @property
-    def ip_list(self):
-        ip_list = []
-        while len(ip_list) < 7:
-            result = self.get_ip()
-            ip_list.extend(result)
-        return ip_list
+    def save_useful_ip(self):
+        datas = self.get_ip()
+        for each in datas:
+            self._save(each)
+
+    def _save(self, data):
+        date_time = str(datetime.datetime.now()).split('.')[0]
+        insert_sql = """
+            INSERT INTO proxyhttps(ip,port,date_time,timeout) VALUES 
+            (%s,%s,%s,%s)
+            ON duplicate KEY UPDATE date_time=VALUES (date_time), timeout=VALUES (timeout);
+        """
+        params = (data[0], data[1], date_time, self.timeout)
+        self.execute(insert_sql, params)
 
     def get_ip(self):
         tables = self.tables
@@ -36,10 +46,10 @@ class GetIP(object):
             data = self.get_data(table_name)
             data = self.filter_data(table_name, data)
             datas.append(data)
-        result = []
+        final_data = []
         for i in range(len(datas)):
-            result.extend(datas[i])
-        return result
+            final_data.extend(datas[i])
+        return final_data
 
     def check(self, ip, port):
         test_url = self.test_url
@@ -70,13 +80,12 @@ class GetIP(object):
     def _filter_date(self, table_name, each):
         if self.check(each[0], each[1]):
             result.put(each)
-            self.set_enable_flag(table_name, each[0])
 
     def get_data(self, table_name):
         select_sql = """
             SELECT ip, port, proxy_type FROM %s WHERE flag=0 ORDER BY 
-            date_time desc limit 10;
-            """ % table_name
+            date_time desc limit %s;
+            """ % (table_name, self.limit)
         self.execute(select_sql)
         data = self.cursor.fetchall()
         new_data = []
@@ -99,8 +108,11 @@ class GetIP(object):
                     """.format(table_name, ip)
         self.execute(update_sql)
 
-    def execute(self, sql):
-        self.cursor.execute(sql)
+    def execute(self, sql, params=None):
+        if params is None:
+            self.cursor.execute(sql)
+        else:
+            self.cursor.execute(sql, params)
         self.conn.commit()
 
     def close(self):
@@ -117,10 +129,9 @@ class GetIP(object):
 
 
 if __name__ == '__main__':
-    t = GetIP(4)
+    t = GetIP(timeout=10, limit=1000)
     start_time = time.time()
-    ds = t.ip_list
-    print('ruesult: ', ds)
+    t.save_useful_ip()
     print('Total cost {} seconds'.format(time.time() - start_time))
     t.close()
 
