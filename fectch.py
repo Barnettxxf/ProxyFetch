@@ -1,14 +1,9 @@
 # -*- coding:utf-8 -*-
 import random
-
+from DBUtils.PooledDB import PooledDB
 import requests
-from urllib.parse import urljoin, unquote
-
-import time
-from scrapy import Selector
 import pymysql
 from config_MySQL import LOCALCONFIG
-
 """
 免费代理网址
 http://www.kxdaili.com/             // 这个不错
@@ -25,10 +20,19 @@ class ProxyNewIp(object):
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/64.0.3282.167 Chrome/64.0.3282.167 Safari/537.36',
     }
 
+    _pool = None
+
     def __init__(self, test_url=None):
-        self.conn = pymysql.connect(**LOCALCONFIG)
+        # self.conn = pymysql.connect(**LOCALCONFIG)
+        self.conn = ProxyNewIp.__get_conn()
         self.cursor = self.conn.cursor()
         self.test_url = test_url
+
+    @staticmethod
+    def __get_conn():
+        if ProxyNewIp._pool is None:
+            ProxyNewIp._pool = PooledDB(creator=pymysql, mincached=1, maxcached=20, maxconnections=20, **LOCALCONFIG)
+        return ProxyNewIp._pool.connection()
 
     def update(self, url=None):
         """

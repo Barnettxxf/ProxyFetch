@@ -3,7 +3,7 @@ import datetime
 
 import pymysql
 import time
-from config_MySQL import MyAliyunServer as CONFIG
+from config_MySQL import LOCALCONFIG as CONFIG
 import requests
 from threading import Thread
 from queue import Queue
