@@ -6,12 +6,22 @@ import pymysql
 from config_MySQL import LOCALCONFIG
 """
 免费代理网址
-http://www.kxdaili.com/             // 这个不错
-http://proxy.mimvp.com/free.php     // 要会员的，不然资源少，放弃
-http://www.xicidaili.com/wn/        // 资源不错，有很多
+http://www.kxdaili.com/             //新增待爬
+http://proxy.mimvp.com/free.php     // 已爬
+http://www.xicidaili.com/wn/        // 已爬
 http://www.ip181.com/               // 一个帖子，还行
-http://www.httpdaili.com/mfdl/      // 要购买的，放弃
-http://www.66ip.cn/                 // 连接不上
+https://www.kuaidaili.com/ops/proxylist/1/  //新增待爬
+http://www.swei360.com/?page=1      //新增待爬
+http://www.sslproxies.org/           // 新增待爬
+http://www.us-proxy.org/             // 新增待爬
+http://free-proxy-list.net/uk-proxy.html'      // 新增待爬
+http://www.socks-proxy.net/'         // 新增待爬
+http://www.data5u.com/free/index.shtml
+http://www.data5u.com/free/gngn/index.shtml
+http://www.data5u.com/free/gnpt/index.shtml
+http://www.data5u.com/free/gwgn/index.shtml
+http://www.data5u.com/free/gwpt/index.shtml
+https://hidemy.name/en/proxy-list/
 """
 
 

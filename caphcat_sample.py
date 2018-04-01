@@ -8,7 +8,10 @@ import string
 """
 用来切割port端口号的图片，分开每个数字存储为对应文件夹的图片,图片放在example文件夹，并将图片的数字（字母）给图片命名。
 """
+
 example_path = os.getcwd() + os.sep + 'example/'
+if not os.path.exists(example_path):
+    os.mkdir('example')
 
 
 def split_image(image_name):

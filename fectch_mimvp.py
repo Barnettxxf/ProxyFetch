@@ -72,6 +72,8 @@ class Proxymimvp(ProxyNewIp):
             self.conn.commit()
 
     def save_image(self):
+        if not os.path.exists(self.image_dir):
+            os.mkdir('image')
         query_sql = """
             SELECT ip, port_image FROM proxymimvp WHERE port is NULL ;
         """
