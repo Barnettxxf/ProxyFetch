@@ -1,7 +1,7 @@
 selenium==3.9.0
 PyMySQL==0.8.0
 requests==2.18.4
-Scrapy==1.5.0
+Scrapy==1.8.1
 urllib3==1.22
 gevent==1.2.2
 DBUtils==1.2
